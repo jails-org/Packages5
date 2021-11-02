@@ -11,7 +11,7 @@ It can be used for creating a **Single Source of Truth** container for your an a
 
 ## Usage
 
-** example-store.js **
+**example-store.js**
 
 ```js
 import store from "jails.packages5/store";
@@ -32,10 +32,9 @@ export default store(initialState, {
 
 After exporting your store, you will be able to access all methods to handle states.
 
-** my-app.js **
+**my-app.js**
 
 ```js
-
 import exampleStore from './example-store.js`
 
 // Subscribes on store
@@ -49,7 +48,6 @@ exampleStore.dispatch('SAVE', { name :'That`s not my name...' })
 exampleStore.getState() // Return the current state of the store
 
 const { name, items } = await exampleStore.when('SAVE') // Returns a promise for that action that will be resolved after this action is called
-
 ```
 
 ## Good to know

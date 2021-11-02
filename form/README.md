@@ -1,4 +1,4 @@
-# form2
+# form
 
 A Component for a Form that performs custom validations.
 
@@ -49,10 +49,10 @@ Configure your markup and fields setting up rules matching with desired validato
 
 The `form` component will fire 2 events:
 
-- `form:submit` : Only fired on submitting attempt and when it's valid.
-- `form:submit:invalid` : Fired on any changes in the form and when it's invalid.
+- `form:submit` : Only fired when submitting form and it's **valid**.
+- `form:submit:invalid` : Only fired when submitting form and it's **invalid**.
 
-### Model
+### Form Model
 
 - `isValid` : Boolean that's true when form is valid and false when it's not, usefull for actions like disabling buttons when form is invalid.
 - `form` : Data containing all state for each field elements.
@@ -62,7 +62,7 @@ The `form` component will fire 2 events:
 
 Each field on `form` component has a model to be used inside template:
 
-### Model
+### Field Model
 
 - `errors` : Containing a object with errors and messages.
 - `isValid` : Boolean that's true when form is valid and false when it's not, usefull for actions like disabling buttons when form is invalid.
