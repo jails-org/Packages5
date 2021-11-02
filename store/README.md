@@ -43,7 +43,7 @@ exampleStore.subscribe(( state, {action, payload}) => {
 })
 
 // Dispatches an action
-exampleStore.dispatch('SAVE', { name :'That`s not my name...' })
+exampleStore.dispatch('SAVE', { name :'That is not my name...' })
 
 exampleStore.getState() // Return the current state of the store
 
