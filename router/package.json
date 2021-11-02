@@ -1,0 +1,19 @@
+{
+  "name": "jails.packages5.router",
+  "version": "1.0.0",
+  "description": "A simple Router imported from Grapnel project",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "architecture",
+    "reactor",
+    "jails"
+  ],
+  "author": "Javiani",
+  "license": "MIT",
+  "dependencies": {
+    "grapnel": "0.6.4"
+  }
+}
