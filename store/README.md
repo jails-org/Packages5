@@ -35,21 +35,21 @@ After exporting your store, you will be able to access all methods to handle sta
 **my-app.js**
 
 ```js
-import exampleStore from './example-store.js`
+import exampleStore from "./example-store.js";
 
 // Subscribes on store
-exampleStore.subscribe(( state, {action, payload}) => {
-    console.log('Heyy, store changed!!', state, action, payload )
-})
+exampleStore.subscribe((state, { action, payload }) => {
+  console.log("Heyy, store changed!!", state, action, payload);
+});
 
 // Dispatches an action
-exampleStore.dispatch('SAVE', { name :'That is not my name...' })
+exampleStore.dispatch("SAVE", { name: "That is not my name..." });
 
 // Return the current state of the store
-exampleStore.getState()
+exampleStore.getState();
 
-// Returns a promise for that action that will be resolved
-const { name, items } = await exampleStore.when('SAVE') after this action is called
+// Returns a promise for that action that will be resolved after this action is called
+const { name, items } = await exampleStore.when("SAVE");
 ```
 
 ## Good to know
