@@ -45,9 +45,11 @@ exampleStore.subscribe(( state, {action, payload}) => {
 // Dispatches an action
 exampleStore.dispatch('SAVE', { name :'That is not my name...' })
 
-exampleStore.getState() // Return the current state of the store
+// Return the current state of the store
+exampleStore.getState()
 
-const { name, items } = await exampleStore.when('SAVE') // Returns a promise for that action that will be resolved after this action is called
+// Returns a promise for that action that will be resolved
+const { name, items } = await exampleStore.when('SAVE') after this action is called
 ```
 
 ## Good to know
