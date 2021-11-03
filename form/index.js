@@ -101,7 +101,7 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 }
 
 export const model = {
-    isValid : true,
+    isValid : false,
     errors  : {},
     form  : {}
 }
