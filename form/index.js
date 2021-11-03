@@ -1,6 +1,6 @@
 
 export default function form ({ main, elm:form, state, trigger, emit, dependencies }) {
-
+    
     const { validations } = dependencies
     
     main( _ => [
@@ -10,7 +10,7 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
     ]) 
 
     const events = ({ on }) => {
-        on('input', '[data-validation]', onchange)
+        on('input', '[data-validation]', debounce(onchange, 10))
         on('blur', '[data-validation]', onchange)
         on('change', '[data-validation]', onchange)
         on('submit', onsubmit)
@@ -48,7 +48,7 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
         doValidation(fields)
     }
     
-    const onchange = debounce((event) => {
+    const onchange = (event) => {
         const element = event.target
         const fields = addFields()
         if( !(element.name in fields ) ) {
@@ -56,7 +56,7 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
         }
         fields[element.name].touched = true
         doValidation( fields )
-    }, 10)
+    }
 
     const doValidation = ( fields ) => {
         const errors = {}
