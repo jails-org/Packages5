@@ -6,11 +6,11 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
     main( _ => [
         events,
         exposing,
-        addFields  
+        start
     ]) 
 
     const events = ({ on }) => {
-        on('input', '[data-validation]', debounce(onchange, 10))
+        on('input', '[data-validation]', debounce(oninput, 10))
         on('blur', '[data-validation]', onchange)
         on('change', '[data-validation]', onchange)
         on('submit', onsubmit)
@@ -20,13 +20,20 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
         expose({ setFields, validate })
     }
 
-    const addFields = () => {
-        const fields = {}
-        Array
+    const start = () => {
+        const fields = getFields()
+        const { errors } = validator(fields)
+        state.set({ form:fields, errors })
+    }
+
+    const getFields = () => {
+        return Array
             .from(form.elements)
             .filter( field => field.name )
-            .forEach( element => addItem(element, fields) )
-        return fields
+            .reduce( (acc, element) => {
+                acc[element.name] = Field( element, form )
+                return acc
+            }, {})   
     }
 
     const setFields = ( data ) => {
@@ -41,43 +48,71 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
     }
 
     const validate = () => {
-        const fields = addFields()
+        const {form:fields} = state.get()
         for( let name in fields ) {
             fields[name].touched = true
         }
-        doValidation(fields)
+        const { errors } = validator(fields)
+        state.set({ form:fields, errors })
     }
     
-    const onchange = (event) => {
+    const oninput = (event) => {
+        
         const element = event.target
-        const fields = addFields()
-        if( !(element.name in fields ) ) {
-            addItem(element, fields)
+        const name = element.name
+        const { form:fields } = state.get()
+        const { errors } = validator({ [name] : fields[name] })
+        const currErrors = state.get().errors
+
+        if( !errors[name] ) {
+            const isValid = !Boolean(Object.keys(currErrors).length)
+            delete currErrors[name]
+            state.set({ errors:currErrors, form:fields, isValid })
+        }else {
+            const isValid = !Boolean(Object.keys(errors).length)
+            state.set({ errors: { ...currErrors, ...errors }, form:fields, isValid })
         }
-        fields[element.name].touched = true
-        doValidation( fields )
     }
 
-    const doValidation = ( fields ) => {
+    const onchange = (event) => {
+        
+        const element = event.target
+        const name = element.name
+        const { form:fields } = state.get()
+        const { errors } = validator(fields)
+
+        fields[name].touched = true
+        state.set({ errors, form:fields })
+    }
+
+    const validator = (fields) => {
+        
         const errors = {}
+        
         for( let name in fields ) {
+            
             const {rules} = fields[name]
+            
             for( let rule in rules ) {
+                
                 const { element } = fields[name]
+                
                 fields[name].value = element.type == 'checkbox'
                     ? (element.checked? element.value : '') 
                     :   form[element.name].value
-                const {isValid, message = `No message defined for rule [${rule}] `} = validations[rule]({ element, value: element.value, fields, options: rules[rule] })
+                    const { isValid,  message = `No message defined for rule [${rule}] `} = validations[rule]({ 
+                        element, 
+                        fields,
+                        value: element.value,
+                        options: rules[rule]
+                    })
+
                 if( !isValid ) {
                     errors[name] = message
                 }
             }
         }
-        if( Object.keys(errors).length ) {
-            state.set({ errors, isValid: false, form: fields })
-        }else {
-            state.set({ errors : {}, isValid: true, form: fields })
-        }
+        return { errors }
     }
 
     const onsubmit = (e) => {
@@ -103,19 +138,15 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 export const model = {
     isValid : false,
     errors  : {},
-    form  : {}
+    form    : {}
 }
 
-const addItem = ( element, fields ) => {
-    fields[ element.name ] = { 
-        element, 
-        rules  : (new Function(`return ${element.dataset.validation}`))(),
-        isValid: true,
-        errors :{},
-        value  :element.value,
-        touched: false
-    }
-}
+const Field = ( element, form ) => ({
+    element,
+    rules  : (new Function(`return ${element.dataset.validation}`))(),
+    value  : element.type == 'checkbox' ? (element.checked? element.value : '') : form[element.name].value,
+    touched: false
+})
 
 const debounce = (func, timeout = 300) => {
     let timer
