@@ -2,6 +2,7 @@
 export default function form ({ main, elm:form, state, trigger, emit, dependencies }) {
     
     const { validations } = dependencies
+    const SELECTOR = 'input, select, textarea'
     
     main( _ => [
         events,
@@ -10,9 +11,9 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
     ]) 
 
     const events = ({ on }) => {
-        on('input', '[data-validation]', debounce(oninput, 10))
-        on('blur', '[data-validation]', onchange)
-        on('change', '[data-validation]', onchange)
+        on('input', SELECTOR, debounce(oninput, 10))
+        on('blur', SELECTOR, onchange)
+        on('change', SELECTOR, onchange)
         on('submit', onsubmit)
     }
 
@@ -82,7 +83,8 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
         const { errors } = validator(fields)
 
         fields[name].touched = true
-        state.set({ errors, form:fields })
+        const isValid = !Boolean(Object.keys(errors).length)
+        state.set({ errors, form:fields, isValid })
     }
 
     const validator = (fields) => {
@@ -93,25 +95,33 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
             
             const {rules} = fields[name]
             
-            for( let rule in rules ) {
+            if( rules ) {
+                for( let rule in rules ) {
                 
+                    const { element } = fields[name]
+                    
+                    fields[name].value = element.type == 'checkbox'
+                        ? (element.checked? element.value : '') 
+                        :   form[element.name].value
+                        const { isValid,  message = `No message defined for rule [${rule}] `} = validations[rule]({ 
+                            element, 
+                            fields,
+                            value: element.value,
+                            options: rules[rule]
+                        })
+    
+                    if( !isValid ) {
+                        errors[name] = message
+                    }
+                }
+            }else {
                 const { element } = fields[name]
-                
                 fields[name].value = element.type == 'checkbox'
                     ? (element.checked? element.value : '') 
                     :   form[element.name].value
-                    const { isValid,  message = `No message defined for rule [${rule}] `} = validations[rule]({ 
-                        element, 
-                        fields,
-                        value: element.value,
-                        options: rules[rule]
-                    })
-
-                if( !isValid ) {
-                    errors[name] = message
-                }
-            }
+            }   
         }
+
         return { errors }
     }
 
