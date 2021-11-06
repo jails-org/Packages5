@@ -1,27 +1,30 @@
-# form
+# mask
 
-A Component for a Form that performs custom validations.
+A Component for mask a input text field.
+**It needs to be used in conjunction with [form](../form) component.**
 
 ## Usage
 
-Import component and provide a hashmap containing all validators rules as dependency.
+Import component and provide a hashmap containing all masks function as dependency.
 
 ```js
 import jails from "jails-js";
-import { form } from "jails.packages5/form";
+import * as form from "jails.packages5/form";
+import * as mask from "jails.packages5/mask";
+
+import { masks } from "jails.packages5/mask/pt-br/masks";
 
 const dependencies = {
-  validations: {
-    required({ element, value, fields, options }) {
-      return {
-        isValid: !!value.trim(),
-        message: "Required field",
-      };
+  masks: {
+    ...masks,
+    uppercase(v) {
+      return v.toUpperCase();
     },
   },
 };
 
 jails.register("form", form, dependencies);
+jails.register("mask", mask, dependencies);
 ```
 
 ## Markup
@@ -36,11 +39,8 @@ Configure your markup and fields setting up rules matching with desired validato
       type="text"
       name="user"
       v-value="{{form.user.value}}"
-      data-validation="{required:true}"
+      data-mask="uppercase"
     />
-    <template>
-      <p v-if="errors.user" class="error-message">{{ errors.user }}</p>
-    </template>
   </div>
 </form>
 ```
