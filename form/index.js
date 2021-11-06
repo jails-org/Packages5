@@ -62,6 +62,11 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
         const element = event.target
         const name = element.name
         const { form:fields } = state.get()
+        
+        if( !(name in fields) ) {
+            fields[element.name] = Field( element, form )
+        }
+
         const { errors } = validator({ [name] : fields[name] })
         const currErrors = state.get().errors
 
@@ -80,6 +85,11 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
         const element = event.target
         const name = element.name
         const { form:fields } = state.get()
+        
+        if( !(name in fields) ) {
+            fields[element.name] = Field( element, form )
+        }
+
         const { errors } = validator(fields)
 
         fields[name].touched = true
