@@ -1,16 +1,17 @@
+import debounce from '../utils/debounce'
 
 export default function mask ({ main, elm, state, dependencies }) {
-
+	
 	const { masks } = dependencies 
 	const fn = masks[ elm.dataset.mask ]
-
+	
 	main( _ => [
 		events
 	])
 
 	const events = ({ on }) => {
-		on('input', 'input[type=text]', onchange)
-		on('change', 'input[type=text]', onchange)
+		on('input', debounce(onchange, 10))
+		on('change', onchange)
 	} 
 
 	const onchange = (e) => {

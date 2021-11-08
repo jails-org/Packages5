@@ -1,3 +1,4 @@
+import debounce from '../utils/debounce'
 
 export default function form ({ main, elm:form, state, trigger, emit, dependencies }) {
     
@@ -167,11 +168,3 @@ const Field = ( element, form ) => ({
     value  : element.type == 'checkbox' ? (element.checked? element.value : '') : form[element.name].value,
     touched: false
 })
-
-const debounce = (func, timeout = 300) => {
-    let timer
-    return (...args) => {
-      clearTimeout(timer)
-      timer = setTimeout( _ => func.apply(null, args), timeout )
-    }
-}
