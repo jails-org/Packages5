@@ -116,15 +116,18 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
                     fields[name].value = element.type == 'checkbox'
                         ? (element.checked? element.value : '') 
                         :   form[element.name].value
+                    
+                    if( element.form ){
                         const { isValid,  message = `No message defined for rule [${rule}] `} = validations[rule]({ 
                             element, 
                             fields,
                             value: element.value,
                             options: rules[rule]
                         })
-    
-                    if( !isValid ) {
-                        errors[name] = message
+        
+                        if( !isValid ) {
+                            errors[name] = message
+                        }
                     }
                 }
             }else {
