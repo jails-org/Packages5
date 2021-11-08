@@ -21,7 +21,7 @@ export default function mask ({ main, elm, state, dependencies }) {
 		const newvalue = fn(value_)
 		
 		e.target.value = newvalue
-		
+
 		if( parent && parent.form ) {
 			const { form } = parent
 			const value = newvalue

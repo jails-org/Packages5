@@ -47,7 +47,7 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
                     form[name].value = data[name]
                 }            
                 trigger('change', `[name=${name}]`)
-            }            
+            }     
         }
     }
 
@@ -164,7 +164,8 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 export const model = {
     isValid : false,
     errors  : {},
-    form    : {}
+    form    : {},
+    data    : {}
 }
 
 const Field = ( element, form ) => ({
