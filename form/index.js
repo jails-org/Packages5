@@ -40,12 +40,14 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 
     const setFields = ( data ) => {
         for( let name in data ) {
-            if( form[name].type == 'checkbox' ) {
-                form[name].checked = Boolean(data[name])
-            }else {
-                form[name].value = data[name]
+            if( form[name] ) {
+                if( form[name].type == 'checkbox' ) {
+                    form[name].checked = Boolean(data[name])
+                }else {
+                    form[name].value = data[name]
+                }            
+                trigger('change', `[name=${name}]`)
             }            
-            trigger('change', `[name=${name}]`)
         }
     }
 
