@@ -24,8 +24,7 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 
     const start = () => {
         const fields = getFields()
-        const { errors } = validator(fields)
-        state.set({ form:fields, errors })
+        state.set({ form:fields })
     }
 
     const getFields = () => {
@@ -93,9 +92,9 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
             fields[element.name] = Field( element, form )
         }
 
-        const { errors } = validator(fields)
-
         fields[name].touched = true
+
+        const { errors } = validator(fields)        
         const isValid = !Boolean(Object.keys(errors).length)
         state.set({ errors, form:fields, isValid })
     }
