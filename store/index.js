@@ -7,6 +7,24 @@ export default function store ( initialState, actions ) {
 
     const api = {
 
+        get(fn){
+            return new Promise((resolve) => {
+                try {
+                    const data = fn(state) 
+                    resolve([ data, Object.assign({}, state ) ])
+                }catch(err) {}
+                const handler = (state) => {
+                    try{ 
+                        const data = fn(state) 
+                        resolve([ data, Object.assign({}, state ) ])
+                        api.unsubscribe(handler)
+                    }
+                    catch(e) {}
+                }
+                api.subscribe(handler)
+            }) 
+        },
+
         getState(){
             return state
         },
@@ -22,22 +40,10 @@ export default function store ( initialState, actions ) {
         },
 
         dispatch( action, payload ) {
-            updates.push({ action, payload })
+            updates.push({ action, payload }) 
             return new Promise((resolve) => {
                 requestAnimationFrame( _ => update({ action, payload, resolve }) )
             }) 
-        },
-
-        when( act ) {
-            return new Promise((resolve) => {
-                const handler = (state, { action }) => {
-                    if( action == act ) {
-                        resolve(Object.assign({}, state ))
-                        api.unsubscribe(handler)
-                    }                    
-                }
-                api.subscribe(handler)
-            })
         }
     }
 

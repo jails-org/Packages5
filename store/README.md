@@ -42,8 +42,8 @@ exampleStore.subscribe((state, { action, payload }) => {
   console.log("Heyy, store changed!!", state, action, payload);
 });
 
-// Second way to retrieving data from Store, by waiting for some action being dispatched.
-const { name, items } = await exampleStore.when("SAVE");
+// Second way to retrieving data from Store, by waiting for condition to be resolved.
+const [name, state] = await exampleStore.get((s) => s.name);
 
 // Dispatches an action
 exampleStore.dispatch("SAVE", { name: "That is not my name..." });
