@@ -73,9 +73,8 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
         const currErrors = state.get().errors
 
         if( !errors[name] ) {
-            const isValid = !Boolean(Object.keys(currErrors).length)
             delete currErrors[name]
-            state.set({ errors:currErrors, form:fields, isValid })
+            state.set({ errors:currErrors, form:fields })
         }else {
             const isValid = !Boolean(Object.keys(errors).length)
             state.set({ errors: { ...currErrors, ...errors }, form:fields, isValid })
@@ -96,6 +95,7 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 
         const { errors } = validator(fields)        
         const isValid = !Boolean(Object.keys(errors).length)
+
         state.set({ errors, form:fields, isValid })
     }
 

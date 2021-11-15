@@ -11,6 +11,7 @@ export default function mask ({ main, elm, state, dependencies }) {
 
 	const events = ({ on }) => {
 		on('input', debounce(onchange, 10))
+		on('blur', debounce(onchange, 10))
 		on('change', onchange)
 	} 
 
