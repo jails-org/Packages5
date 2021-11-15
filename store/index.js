@@ -11,13 +11,16 @@ export default function store ( initialState, actions ) {
             return new Promise((resolve) => {
                 try {
                     const data = fn(state) 
-                    resolve([ data, Object.assign({}, state ) ])
+                    if( data )
+                        resolve([ data, Object.assign({}, state ) ])
                 }catch(err) {}
                 const handler = (state) => {
                     try{ 
                         const data = fn(state) 
-                        resolve([ data, Object.assign({}, state ) ])
-                        api.unsubscribe(handler)
+                        if( data ) {
+                            resolve([ data, Object.assign({}, state ) ])
+                            api.unsubscribe(handler)
+                        }                            
                     }
                     catch(e) {}
                 }
