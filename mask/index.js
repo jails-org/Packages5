@@ -22,11 +22,13 @@ export default function mask ({ main, elm, state, dependencies }) {
 		const newvalue = fn(value_)
 		
 		e.target.value = newvalue
-
+		
 		if( parent && parent.form ) {
-			const { form } = parent
-			const value = newvalue
-			state.set({ ...parent, form: { [name]: { ...form[name], value } } })
-		}		  
+			state.set(s => {	
+				s.errors = s.parent.errors 
+				s.form = {  ...s.parent.form, [name]: { ...s?.parent?.form[name], value: newvalue } }
+				s.isValid = s.parent.isValid
+			})
+		}
 	}
 }
