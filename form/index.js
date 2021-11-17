@@ -69,16 +69,10 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
             fields[element.name] = Field( element, form )
         }
         
-        const { errors } = validator({ [name] : fields[name] })
-        const currErrors = state.get().errors
+        const { errors } = validator(fields)
 
-        if( !errors[name] ) {
-            delete currErrors[name]
-            state.set({ errors:currErrors, form:fields })
-        }else {
-            const isValid = !Boolean(Object.keys(errors).length)
-            state.set({ errors: { ...currErrors, ...errors }, form:fields, isValid })
-        }
+        const isValid = !Boolean(Object.keys(errors).length)
+        state.set({ errors, form:fields, isValid })
     }
 
     const onchange = (event) => {
