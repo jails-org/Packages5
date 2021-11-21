@@ -1,0 +1,14 @@
+{
+  "name": "jails.packages5.form",
+  "version": "1.0.0",
+  "description": "A simple form package for jails projects",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jails"
+  ],
+  "author": "Javiani",
+  "license": "MIT"
+}
