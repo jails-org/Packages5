@@ -12,7 +12,7 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 	]) 
    
 	const events = ({ on }) => {
-		on('input', SELECTOR, debounce(oninput, 10))
+		on('keyup', SELECTOR, debounce(onkeyup, 10))
 		on('blur', SELECTOR, onchange)
 		on('change', SELECTOR, onchange)
 		on('submit', onsubmit)
@@ -59,14 +59,15 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 		state.set({ form:fields, errors })
 	}
 	
-	const oninput = (event) => {
+	const onkeyup = (event) => {
 		
 		const element = event.target
 		const name = element.name
 		const { form:fields } = state.get()
 		
 		fields[name] = Field( element, form )
-		
+		fields[name].touched = true
+			
 		const { errors } = validator(fields)
 
 		const isValid = !Boolean(Object.keys(errors).length)
