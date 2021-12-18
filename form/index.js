@@ -66,7 +66,6 @@ export default function form ({ main, elm:form, state, trigger, emit, dependenci
 		const { form:fields } = state.get()
 		
 		fields[name] = Field( element, form )
-		fields[name].touched = true
 			
 		const { errors } = validator(fields)
 
