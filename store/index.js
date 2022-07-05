@@ -1,63 +1,62 @@
+export default function store(initialState, actions) {
 
-export default function store ( initialState, actions ) {
-    
-    let topics  = []
+    let topics = []
     let updates = []
-    let state   = JSON.parse(JSON.stringify(initialState))
+    let state = JSON.parse(JSON.stringify(initialState))
 
     const api = {
 
-        get(fn){
+        get(fn) {
             return new Promise((resolve) => {
                 try {
-                    const data = fn(state) 
-                    if( data )
-                        resolve([ data, Object.assign({}, state ) ])
-                }catch(err) {}
+                    const data = fn(state)
+                    if (data)
+                        resolve([data, Object.assign({}, state)])
+                } catch (err) { }
                 const handler = (state) => {
-                    try{ 
-                        const data = fn(state) 
-                        if( data ) {
-                            resolve([ data, Object.assign({}, state ) ])
+                    try {
+                        const data = fn(state)
+                        if (data) {
+                            resolve([data, Object.assign({}, state)])
                             api.unsubscribe(handler)
-                        }                            
+                        }
                     }
-                    catch(e) {}
+                    catch (e) { }
                 }
                 api.subscribe(handler)
-            }) 
+            })
         },
 
-        getState(){
+        getState() {
             return state
         },
 
-        subscribe( fn ) {
-            if( fn.call ) {
+        subscribe(fn) {
+            if (fn.call) {
                 topics.push(fn)
             }
         },
 
         unsubscribe(fn) {
-            topics = topics.filter( item => item != fn )
+            topics = topics.filter(item => item != fn)
         },
 
-        dispatch( action, payload ) {
-            updates.push({ action, payload }) 
+        dispatch(action, payload) {
+            updates.push({ action, payload })
             return new Promise((resolve) => {
-                requestAnimationFrame( _ => update({ action, payload, resolve }) )
-            }) 
+                requestAnimationFrame(_ => update({ action, payload, resolve }))
+            })
         }
     }
 
     const update = ({ action, payload, resolve }) => {
-        updates.forEach( ({ action, payload }) => {
-            Object.assign( state, actions[action].call(null, state, payload, api) )
+        updates.forEach(({ action, payload }) => {
+            Object.assign(state, actions[action].call(null, state, payload, api))
         })
-        if ( updates.length ) {
-            topics.forEach( topic => { topic(state, { action, payload }) })
+        if (updates.length) {
+            topics.forEach(topic => { topic(state, { action, payload }) })
             updates = []
-        } 
+        }
         resolve(state)
     }
 
